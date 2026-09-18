@@ -1,0 +1,37 @@
+.header-grigio {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.cella-progetto {
+  min-width: 280px !important;
+}
+
+.cella-giorno {
+  min-width: 55px !important;
+  padding: 0 !important;
+  text-align: center !important;
+}
+
+.premium-table-wrapper {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+.premium-table-wrapper::-webkit-scrollbar {
+  height: 8px;
+  display: block;
+}
+
+.premium-table-wrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 999px;
+}
+
+.premium-table-wrapper .mat-mdc-table {
+  width: auto !important;
+  min-width: 100% !important;
+  table-layout: auto;
+}

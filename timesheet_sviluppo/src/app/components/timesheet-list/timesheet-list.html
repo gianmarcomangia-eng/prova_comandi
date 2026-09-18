@@ -1,0 +1,150 @@
+<div style="padding: 30px; width: 100%; max-width: 100%; box-sizing: border-box; margin: 0; background-color: #f4f7fa; min-height: 100vh;">
+
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 20px;">
+    <div>
+      <h1 class="premium-title" style="margin: 0; color: #0f172a;">Timesheet Dashboard</h1>
+      <p style="margin: 0; color: #64748b; margin-top: 5px; font-size: 15px;">Gestione presenze e attività mensili</p>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 10px; background: white; padding: 5px 15px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #e2e8f0;">
+      <button mat-icon-button (click)="cambiaMese(-1)" style="color: #64748b;">
+        <mat-icon>🠐</mat-icon>
+      </button>
+      
+      <span style="font-weight: 700; font-size: 16px; min-width: 140px; text-align: center; color: #1e293b; text-transform: uppercase;">
+        {{ nomeMeseCorrente }}
+      </span>
+      
+      <button mat-icon-button (click)="cambiaMese(1)" style="color: #64748b;">
+        <mat-icon>🠒</mat-icon>
+      </button>
+    </div>
+    
+  </div>
+
+  
+
+  <div *ngIf="mostraForm" class="premium-card" style="border-top: 4px solid #0ea5e9;">
+    <h2 style="margin-top: 0; margin-bottom: 25px; color: #1e293b; font-weight: 700;">Registra Attività</h2>
+    
+    <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+      <mat-form-field appearance="outline" style="flex: 1; min-width: 200px;">
+        <mat-label>Scegli una data</mat-label>
+        <input matInput type="date">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="flex: 1; min-width: 200px;">
+        <mat-label>Progetto / Attività</mat-label>
+        <input matInput>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="width: 120px;">
+        <mat-label>Ore</mat-label>
+        <input matInput type="number">
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" style="flex: 2; min-width: 250px;">
+        <mat-label>Note (Opzionale)</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </div>
+
+    <div style="text-align: right; margin-top: 10px;">
+      <button mat-flat-button style="background-color: #0ea5e9; color: white; border-radius: 8px; padding: 5px 30px; font-weight: 600;">
+        Salva Ore
+      </button>
+    </div>
+  </div>
+
+  <mat-tab-group animationDuration="0ms" style="background: white; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); padding: 10px;">
+    
+    <mat-tab label="Timesheet Mensile">
+      <div style="padding-top: 25px;">
+        <div class="premium-table-wrapper" style="overflow-x: auto; width: 100%;">
+          
+          <table mat-table [dataSource]="datiPivot" style="width: 100%; min-width: 1400px;">
+            
+            <ng-container matColumnDef="progetto" sticky>
+              <th mat-header-cell *matHeaderCellDef class="cella-progetto header-grigio" style="font-weight: bold; font-size: 14px; padding: 0 20px;"> 
+                PROGETTO / ATTIVITÀ 
+              </th>
+              <td mat-cell *matCellDef="let riga" class="cella-progetto" style="padding: 15px 20px;"> 
+                <div style="font-weight: bold; font-size: 14px; color: #0f172a;">{{ riga.progetto }}</div>
+              </td>
+            </ng-container>
+
+            <ng-container *ngFor="let giorno of giorniDelMese" [matColumnDef]="giorno.toString()">
+              <th mat-header-cell *matHeaderCellDef class="cella-giorno header-grigio" style="padding: 0 5px;"> 
+                <div style="font-weight: bold; font-size: 14px; color: #1e293b;">{{ giorno }}</div>
+                <div style="font-size: 10px; color: #64748b;">{{ getNomeGiorno(giorno) }}</div>
+              </th>
+              
+              <td mat-cell *matCellDef="let riga" class="cella-giorno-hover" style="padding: 0;"> 
+                <div style="height: 100%; min-height: 45px; display: flex; align-items: center; justify-content: center;">
+                  <span *ngIf="riga[giorno]" style="color: #0ea5e9; font-weight: bold;">{{ riga[giorno] }}</span>
+                  <span *ngIf="!riga[giorno]" style="color: #cbd5e1;">-</span>
+                </div>
+              </td>
+            </ng-container>
+
+            <ng-container matColumnDef="totale" stickyEnd>
+              <th mat-header-cell *matHeaderCellDef class="header-grigio" style="text-align: center; font-weight: bold; min-width: 60px; border-left: 1px solid #e2e8f0; background-color: #f8fafc;"> 
+                TOT 
+              </th>
+              <td mat-cell *matCellDef="let riga" style="text-align: center; font-weight: bold; border-left: 1px solid #e2e8f0; background-color: #f8fafc; color: #0ea5e9;"> 
+                {{ riga.totale }}
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="colonneMostrate"></tr>
+            <tr mat-row *matRowDef="let row; columns: colonneMostrate"></tr>
+          </table>
+
+         
+
+        </div>
+      </div>
+    </mat-tab>
+
+    <mat-tab label="Il Mio Storico">
+      <div style="padding-top: 25px;">
+        <div class="premium-table-wrapper" style="overflow-x: auto;">
+          
+          <table mat-table [dataSource]="listaTimesheet" style="width: 100%;">
+            <ng-container matColumnDef="date">
+              <th mat-header-cell *matHeaderCellDef style="padding: 0 20px;"> Data </th>
+              <td mat-cell *matCellDef="let element" style="padding: 15px 20px;"> {{element.date}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="project_name">
+              <th mat-header-cell *matHeaderCellDef> Progetto </th>
+              <td mat-cell *matCellDef="let element" style="font-weight: 500; color: #0f172a;"> {{element.project_name}} </td>
+            </ng-container>
+        
+            <ng-container matColumnDef="hours">
+              <th mat-header-cell *matHeaderCellDef> Ore Lavorate </th>
+              <td mat-cell *matCellDef="let element"> 
+                <strong style="color: #0ea5e9;">{{element.hours}} ore</strong> 
+              </td>
+            </ng-container>
+            
+            <ng-container matColumnDef="notes">
+              <th mat-header-cell *matHeaderCellDef> Note </th>
+              <td mat-cell *matCellDef="let element" style="color: #64748b;"> {{element.notes}} </td>
+            </ng-container>
+        
+            <tr mat-header-row *matHeaderRowDef="colonneTabella"></tr>
+            <tr mat-row *matRowDef="let row; columns: colonneTabella;"></tr>
+          </table>
+        
+          <div *ngIf="listaTimesheet.length === 0" style="text-align: center; padding: 40px; color: #64748b;">
+            Nessun timesheet inserito.
+          </div>
+
+        </div>
+      </div>
+    </mat-tab>
+
+  </mat-tab-group>
+
+</div>

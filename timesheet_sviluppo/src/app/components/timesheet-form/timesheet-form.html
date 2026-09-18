@@ -1,0 +1,42 @@
+<div>
+  <h2>Registra Ore</h2>
+
+  <form
+    #tsForm="ngForm"
+    (ngSubmit)="onSubmit(tsForm)"
+    style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 40px; background: #f9f9f9; padding: 20px; border-radius: 8px;"
+  >
+   <mat-form-field appearance="outline">
+    <mat-label>Scegli una data</mat-label>
+    <input 
+      matInput 
+      [matDatepicker]="picker" 
+      name="date" 
+      [(ngModel)]="nuovoTimesheet.date" 
+      required>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+    <mat-form-field appearance="fill" style="flex: 1 1 200px;">
+      <mat-label>Progetto / Attività</mat-label>
+      <input matInput type="text" name="project_name" ngModel required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="flex: 1 1 100px;">
+      <mat-label>Ore</mat-label>
+      <input matInput type="number" name="hours" ngModel required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" style="flex: 1 1 100%;">
+      <mat-label>Note (Opzionale)</mat-label>
+      <textarea matInput name="notes" ngModel rows="2"></textarea>
+    </mat-form-field>
+
+    <div style="width: 100%; text-align: right;">
+      <button mat-raised-button color="primary" type="submit" [disabled]="!tsForm.valid">
+        Salva Ore
+      </button>
+    </div>
+  </form>
+</div>

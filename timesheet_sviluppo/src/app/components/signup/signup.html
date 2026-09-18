@@ -1,0 +1,22 @@
+<div style="text-align: center; margin-top: 50px;">
+    <h1>Registrazione </h1>
+  
+    <form #signupform="ngForm" (ngSubmit)="onSubmit(signupform)">
+      <mat-form-field appearance="fill">
+        <mat-label>Scegli uno Username</mat-label>
+        <input matInput type="text" name="username" ngModel required>
+      </mat-form-field>
+      <br>
+      <mat-form-field appearance="fill">
+        <mat-label>Scegli una Password</mat-label>
+        <input matInput type="password" name="password" ngModel required>
+      </mat-form-field>
+      <br><br>
+      <button mat-raised-button color="accent" type="submit" [disabled]="!signupform.valid">Registrati</button>
+    </form>
+  
+    <br>
+    <a routerLink="/login" style="color: blue; text-decoration: underline; cursor: pointer;">
+      Hai già un account? Accedi qui
+    </a>
+  </div>
